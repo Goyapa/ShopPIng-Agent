@@ -3,8 +3,8 @@
     "description": "ShoPIng-Agent Scanner Process",
     "main" : "main.js",
     "dependencies": {
-        "rest-client": "X"
 
+        "restler": "3.2.0"
 
     },
     "repository" : { "type" : "git"

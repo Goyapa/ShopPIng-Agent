@@ -1,28 +1,34 @@
+var host = "http://localhost:9010/";
+
+
+// var host = "http://192.168.178.120:9010/";
 
 var _ = require("underscore");
+var rest = require('restler');
 
 var tokens = [
-    {token: "EAN",             pattern: /^([0-9]{8,13})$/},
-    {token: "AMOUNT",          pattern: /^([-+]?[0-9]([0-9]?))$/},
-    {token: "AGAIN",           pattern: /^$/},
-    {token: "MODE_INCOMING",   string: "Einkauf"},
-    {token: "MODE_INCOMING",   string: "in"},
-    {token: "MODE_INCOMING",   string: "/+"},
-    {token: "MODE_OUTGOING",   string: "Verbrauch"},
-    {token: "MODE_OUTGOING",   string: "out"},
-    {token: "MODE_OUTGOING",   string: "/-"}
+    {token: "EAN", pattern: /^([0-9]{8,13})$/},
+    {token: "AMOUNT", pattern: /^([-+]?[0-9]([0-9]?))$/},
+    {token: "AGAIN", pattern: /^$/},
+    {token: "MODE_INCOMING", string: "Einkauf"},
+    {token: "MODE_INCOMING", string: "in"},
+    {token: "MODE_INCOMING", string: "/+"},
+    {token: "MODE_OUTGOING", string: "Verbrauch"},
+    {token: "MODE_OUTGOING", string: "out"},
+    {token: "MODE_OUTGOING", string: "/-"}
 ];
 
 
-var classify_input = function(line) {
-    for(var i in tokens) {
+var classify_input = function (line) {
+    for (var i in tokens) {
         rule = tokens[i];
         var matches = ((rule.pattern && rule.pattern.test(line)) ||
-            (rule.string && rule.string == line));
-        if(matches) {
+            (rule.string && rule.string == line));
+        if (matches) {
             return rule.token;
         }
-    };
+    }
+    ;
     return undefined;
 }
 
@@ -40,13 +46,25 @@ rl.setPrompt('?? > ');
 rl.prompt();
 
 
-
 function now() {
     return new Date().getTime();
 }
 
 
 function emit(mode, ean, amount) {
+    var jsonData = {
+        "type": mode,
+        "ean": ean,
+        "date": now,
+        "amount": amount
+    };
+    rest.postJson(host + 'rest/event', jsonData)
+        .on('complete', function (data, response) {
+            console.log(data);
+        }).on('error', function(data, response) {
+            console.log("Error: "+JSON.data);
+        });
+
     console.log(JSON.stringify({"type": mode, "ean": ean, "amount": amount, "timestamp": now()}));
 };
 
@@ -55,15 +73,15 @@ var ean = undefined;
 var lastEvent = undefined;
 
 
-rl.on('line', function(line) {
+rl.on('line', function (line) {
     line = line.trim();
-    if(!(lastEvent > now() - 15*60*1000)) {
+    if (!(lastEvent > now() - 15 * 60 * 1000)) {
         mode = undefined;
         ean = undefined;
     }
     lastEvent = now();
 
-    switch(classify_input(line)) {
+    switch (classify_input(line)) {
         case "MODE_INCOMING":
             mode = "in";
             console.log("Set mode to in");
@@ -73,31 +91,31 @@ rl.on('line', function(line) {
             console.log("Set mode to out");
             break;
         case "AGAIN":
-            if(mode && ean) {
+            if (mode && ean) {
                 emit(mode, ean, 1);
             }
             console.log("again");
             break;
         case "AMOUNT":
-            if(mode && ean) {
+            if (mode && ean) {
                 emit(mode, ean, parseInt(line));
             }
             console.log("amount");
             break;
         case "EAN":
             ean = line;
-            if(mode) {
+            if (mode) {
                 emit(mode, ean, 1);
             }
             break;
     }
-    if(mode) {
+    if (mode) {
         rl.setPrompt(mode + "> ");
     } else {
         rl.setPrompt("??> ")
     }
     rl.prompt();
-}).on('close', function() {
+}).on('close', function () {
     console.log('Have a great day!');
     process.exit(0);
 });
