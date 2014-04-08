@@ -1,0 +1,14 @@
+{
+    "name": "spia-scanner-process",
+    "description": "ShoPIng-Agent Scanner Process",
+    "main" : "main.js",
+    "dependencies": {
+        "rest-client": "X"
+
+
+    },
+    "repository" : { "type" : "git"
+        , "url" : "https://github.com/ArekCzarnik/ShopPIng-Agent.git"
+    }
+
+}
