@@ -22,6 +22,18 @@ var Event = db.define('event', {
     amount: { type: "number" }
  });
 
+var mapEventToJson = function(event) {
+    var result = JSON.stringify(
+        {
+            id: event.id,
+            type: event.type,
+            ean: event.ean,
+            date: event.created.getTime(),
+            amount: event.amount
+        });
+    return result;
+};
+
 // synchronize the model definition to the database (only first creation, no modifications supported)
 Event.sync();
 
@@ -33,6 +45,26 @@ Event.sync();
 app.get('/hello.txt', function(req, res){
     res.send('Hello World');
 });
+
+app.get('/rest/event', function(req, res) {
+    console.log("Querying all events");
+
+    Event.find(function(err, events) {
+        console.log("error: " + err);
+        var result = "["
+        for (var i = 0; i < events.length; i++) {
+            result = result += mapEventToJson(events[i]);
+            if(i < events.length - 1) {
+                result += ", ";
+            }
+        }
+        result += "]";
+        console.log("result: " + result);
+        res.send(result);
+    });
+});
+
+
 
 app.post('/rest/event', function(req, res) {
     var event = req.body;
