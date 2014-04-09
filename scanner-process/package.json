@@ -4,7 +4,8 @@
     "main" : "main.js",
     "dependencies": {
 
-        "restler": "3.2.0"
+        "restler": "3.2.0",
+        "underscore" : "1.6.0"
 
     },
     "repository" : { "type" : "git"
