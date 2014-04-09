@@ -1,7 +1,9 @@
+#!/opt/node/bin/node
 var host = "http://localhost:9010/";
 
 
-// var host = "http://192.168.178.120:9010/";
+//var host = "http://192.168.178.120:9010/";
+//var host = "http://192.168.178.81:9010/";
 
 var _ = require("underscore");
 var rest = require('restler');
@@ -32,12 +34,6 @@ var classify_input = function (line) {
     return undefined;
 }
 
-console.log(classify_input("1234567891234"));
-console.log(classify_input("+3"));
-console.log(classify_input("in"));
-console.log(classify_input(""));
-console.log(classify_input("naoerid"));
-
 
 var readline = require('readline'),
     rl = readline.createInterface(process.stdin, process.stdout);
@@ -55,7 +51,7 @@ function emit(mode, ean, amount) {
     var jsonData = {
         "type": mode,
         "ean": ean,
-        "date": now,
+        "date": now(),
         "amount": amount
     };
     rest.postJson(host + 'rest/event', jsonData)
