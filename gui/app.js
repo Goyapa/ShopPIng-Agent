@@ -49,6 +49,11 @@ app.get('/api/shop', api.shop);
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
 
+app.configure(function () {
+    app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
+    app.use(express.bodyParser());
+});
+
 /**
 * Start Server
 */
