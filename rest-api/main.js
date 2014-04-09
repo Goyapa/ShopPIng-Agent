@@ -60,6 +60,7 @@ app.get('/rest/event', function(req, res) {
         }
         result += "]";
         console.log("result: " + result);
+        res.setHeader("Content-Type", "application/json");
         res.send(result);
     });
 });
