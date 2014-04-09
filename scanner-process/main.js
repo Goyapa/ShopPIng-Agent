@@ -80,10 +80,12 @@ rl.on('line', function (line) {
     switch (classify_input(line)) {
         case "MODE_INCOMING":
             mode = "in";
+            ean = undefined;
             console.log("Set mode to in");
             break;
         case "MODE_OUTGOING":
             mode = "out";
+            ean = undefined;
             console.log("Set mode to out");
             break;
         case "AGAIN":
