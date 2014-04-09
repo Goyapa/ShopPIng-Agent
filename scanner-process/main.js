@@ -1,4 +1,4 @@
-#!/opt/node/bin/node
+
 var host = "http://localhost:9010/";
 
 
@@ -18,7 +18,7 @@ var tokens = [
     {token: "MODE_OUTGOING", string: "Verbrauch"},
     {token: "MODE_OUTGOING", string: "out"},
     {token: "MODE_OUTGOING", string: "/-"},
-    {token: "MODE_EXIT",     string: "exit"}
+    {token: "EXIT",     string: "exit"}
 ];
 
 
