@@ -28,7 +28,7 @@ var mapEventToJson = function(event) {
             id: event.id,
             type: event.type,
             ean: event.ean,
-            date: event.created.getTime(),
+            date: event.created,
             amount: event.amount
         });
     return result;
