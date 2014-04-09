@@ -1,7 +1,9 @@
+
 var host = "http://localhost:9010/";
 
 
-// var host = "http://192.168.178.120:9010/";
+//var host = "http://192.168.178.120:9010/";
+//var host = "http://192.168.178.81:9010/";
 
 var _ = require("underscore");
 var rest = require('restler');
@@ -15,7 +17,8 @@ var tokens = [
     {token: "MODE_INCOMING", string: "/+"},
     {token: "MODE_OUTGOING", string: "Verbrauch"},
     {token: "MODE_OUTGOING", string: "out"},
-    {token: "MODE_OUTGOING", string: "/-"}
+    {token: "MODE_OUTGOING", string: "/-"},
+    {token: "EXIT",     string: "exit"}
 ];
 
 
@@ -31,12 +34,6 @@ var classify_input = function (line) {
     ;
     return undefined;
 }
-
-console.log(classify_input("1234567891234"));
-console.log(classify_input("+3"));
-console.log(classify_input("in"));
-console.log(classify_input(""));
-console.log(classify_input("naoerid"));
 
 
 var readline = require('readline'),
@@ -55,7 +52,7 @@ function emit(mode, ean, amount) {
     var jsonData = {
         "type": mode,
         "ean": ean,
-        "date": now,
+        "date": now(),
         "amount": amount
     };
     rest.postJson(host + 'rest/event', jsonData)
@@ -84,10 +81,12 @@ rl.on('line', function (line) {
     switch (classify_input(line)) {
         case "MODE_INCOMING":
             mode = "in";
+            ean = undefined;
             console.log("Set mode to in");
             break;
         case "MODE_OUTGOING":
             mode = "out";
+            ean = undefined;
             console.log("Set mode to out");
             break;
         case "AGAIN":
@@ -107,6 +106,10 @@ rl.on('line', function (line) {
             if (mode) {
                 emit(mode, ean, 1);
             }
+            break;
+        case "EXIT":
+            console.log("exit process...");
+            process.exit(0);
             break;
     }
     if (mode) {
