@@ -13,10 +13,28 @@ exports.name = function (req, res) {
 };
 
 exports.shop = function (req, res) {
-    rest.get(host + 'rest/event')
-        .on('complete', function (data, response) {
-            res.json(data);
-        }).on('error', function (data, response) {
-            console.log("Error: " + JSON.data);
-        });
+    res.json(
+        [
+            { "type": "blub",
+                "ean": "12345678",
+                "date": 1388574059000,
+                "amount": 1 },
+            { "type": "blub",
+                "ean": "12345678",
+                "date": 1388574059000,
+                "amount": 1 },
+            { "type": "blub",
+                "ean": "12345678",
+                "date": 1388574059000,
+                "amount": 1 }
+        ]
+    );
+    /*
+     rest.get(host + 'rest/event')
+     .on('complete', function (data, response) {
+     res.json(data);
+     }).on('error', function (data, response) {
+     console.log("Error: " + JSON.data);
+     });
+     */
 };
