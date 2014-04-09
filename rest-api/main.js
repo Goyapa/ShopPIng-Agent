@@ -17,7 +17,7 @@ var db = orm.connect("mysql://shoppinguser:test1234@127.0.0.1/shopping", functio
 
 var Event = db.define('event', {
     type: { type: "text" },
-    ean: { type: "number" },
+    ean: { type: "text" },
     created: { type: "date" },
     amount: { type: "number" }
  });
@@ -64,7 +64,14 @@ app.get('/rest/event', function(req, res) {
     });
 });
 
-
+app.get('/rest/event/inventory', function(req, res) {
+    console.log("Querying inventory");
+    //The same as "select avg(weight), age from person where country='someCountry' group by age;"
+    Event.aggregate(["ean", "type"]).sum("amount").groupBy("ean", "type").get(function (err, stats) {
+        console.log("statistics: " + JSON.stringify(stats));
+        res.send(JSON.stringify(stats));
+    });
+});
 
 app.post('/rest/event', function(req, res) {
     var event = req.body;
@@ -80,6 +87,7 @@ app.post('/rest/event', function(req, res) {
     newEvent.save(function (err, createdEvent) {
         if (!err) {
             console.log("Saved! ID=" + createdEvent.id);
+            console.log("Saved! EAN=" + createdEvent.ean);
             res.statusCode = 201;
             res.send(JSON.stringify({id: createdEvent.id, message: "ok"}));
         } else {
