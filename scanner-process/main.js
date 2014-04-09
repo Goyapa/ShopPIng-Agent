@@ -17,7 +17,8 @@ var tokens = [
     {token: "MODE_INCOMING", string: "/+"},
     {token: "MODE_OUTGOING", string: "Verbrauch"},
     {token: "MODE_OUTGOING", string: "out"},
-    {token: "MODE_OUTGOING", string: "/-"}
+    {token: "MODE_OUTGOING", string: "/-"},
+    {token: "MODE_EXIT",     string: "exit"}
 ];
 
 
@@ -105,6 +106,10 @@ rl.on('line', function (line) {
             if (mode) {
                 emit(mode, ean, 1);
             }
+            break;
+        case "EXIT":
+            console.log("exit process...");
+            process.exit(0);
             break;
     }
     if (mode) {
